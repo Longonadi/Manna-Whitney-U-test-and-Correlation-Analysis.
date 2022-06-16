@@ -1,0 +1,111 @@
+#To load library
+```{r}
+library(readxl)
+pers<- read_excel("C:/Users/LILYSTATA/Desktop/personalData2.xlsx")
+pers
+library(car)
+library(dplyr)
+library(tinytex)
+attach(pers)
+```
+
+
+#To do 3: to load the file personalData in Rstudio
+```{r  pers<- read_excel("C:/Users/LILYSTATA/Desktop/personalData2.xlsx")}
+attach(pers)
+```
+
+## PersonalData Analysis using R
+
+#To do 4: to verify whether median age of women is equal to the median age of men
+
+```{r}
+wilcox.test(age~sex,data=pers)
+```
+
+#To do 5: to verify whether median age of women of height below 170cm is equal to the median age of men of height above 180cm
+```{r}
+Women<-subset(pers,pers$sex=="F")
+Men<-subset(pers,pers$sex=="M")
+Women_below170<-subset(Women, height< "170")
+Men_above180<-subset(Men, height>"180")
+wilcox.test(Women_below170$age,Men_above180$age)
+```
+#To do 6: to verify whether median age of women of height of at most 180cm is equal to the median age of women of height above 180cm
+
+```{r}
+Men_atmost180<-subset(Men,height<180.1)
+wilcox.test(Men_atmost180$age,Men_above180$age)
+```
+
+#To do 7: to verify whether median age of women of height below 165cm is equal to the median age of women of height at least 165cm
+
+```{r}
+Women_below165<-subset(Women, height< "165")
+Women_atleast165<-subset(Women, height>"165.5")
+wilcox.test(Women_below165$age,Women_atleast165$age)
+```
+## Dietician Analysis using R
+
+#To do 8: to load the file Dietician in R studio
+```{r library(readxl)}
+dietician2 <- read_excel("C:/Users/LILYSTATA/Desktop/dietician2.xlsx")
+attach(dietician2)
+```
+#To do 9: to calculate the linear correlation coefficient between the height of the examined persons and their weight before diet
+```{r}
+cor.test(height,weight.before.diet,method="pearson")
+```
+
+#To do 10: to calculate the linear correlation coefficient between the height of the examined persons and their weight after diet
+```{r}
+cor.test(height,weight.after.diet,method="pearson")
+```
+#To do 11: to calculate the linear correlation coefficient between the age of the respondents and their height
+```{r}
+cor.test(age,height,method="pearson")
+```
+
+#To do 12: to calculate the regression line in which the explained variable is the weight of people after diet, while the explanatory variable is their height
+```{r}
+dietician2.model<-lm(weight.after.diet~height,data=dietician2)
+intercept<-coef(dietician2.model)[1]
+slope<-coef(dietician2.model)[2]
+summary(dietician2.model)
+```
+
+#To do 13: to calculate the regression line in which the explained variable is the height of the respondents, while the explanatory variable is their weight before diet
+```{r}
+dietician3.model<-lm(height~weight.before.diet,data=dietician2)
+intercept<-coef(dietician3.model)[1]
+slope<-coef(dietician2.model)[2]
+summary(dietician3.model)
+```
+
+
+#To do 14: to check if there is a linear dependency in women between their weight before diet and their weight after diet
+```{r}
+cor.test(weight.before.diet[1:100],weight.after.diet[1:100],method="pearson")
+```
+
+#To do 15: to check if there is a linear relationship between height and weight before diet in men aged over 40.
+
+```{r}
+height_weight_before<-arrange(dietician2,sex,age)
+cor.test(data=height_weight_before,height[154:200],weight.before.diet[154:200],method="pearson")
+```
+
+#To do 16:Is there a linear dependency in men between age and weight before diet.
+```{r}
+cor.test(weight.before.diet[101:200],weight.after.diet[101:200],method="pearson")
+```
+
+#To do 17: find the regression line for women of height below 170cm, where the explained variable is there weight after diet and height is the explanatory variable.
+```{r}
+women_of_height<-arrange(dietician2,sex,height)
+women_of_height
+dietician4.model<-lm(height~weight.before.diet,data=women_of_height)
+intercept<-coef(dietician4.model)[1]
+slope<-coef(dietician4.model)[2]
+summary(dietician4.model)
+```
